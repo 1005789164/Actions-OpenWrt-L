@@ -88,15 +88,16 @@ jobs:
       if: env.UPLOAD_CONFIG == 'true'
       run: |
         cd openwrt
-        cp $CONFIG_FILE .config.up
-        ./scripts/diffconfig.sh > diffconfig.up
+        mkdir -p upload
+        cp -f $CONFIG_FILE upload
+        ./scripts/diffconfig.sh > upload/diffconfig
 
     - name: Upload config directory
       uses: actions/upload-artifact@master
       if: env.UPLOAD_CONFIG == 'true'
       with:
         name: OpenWrt_config
-        path: openwrt/*.up
+        path: openwrt/upload
 
     - name: Download package
       id: package
