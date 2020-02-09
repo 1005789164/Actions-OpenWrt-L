@@ -11,15 +11,15 @@ name: Build OpenWrt
 on:
   release:
     types: [published]
-  push:
-    branches:
-      - master
-    paths:
-      - '.config'
+#  push:
+#    branches:
+#      - master
+#    paths:
+#      - '.config'
 #  schedule:
 #    - cron: 0 8 * * 5
-#  watch:
-#    types: [started]
+  watch:
+    types: [started]
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
@@ -27,13 +27,14 @@ env:
   CONFIG_FILE: .config
   DIY_SH: diy.sh
   FREE_UP_DISK: false
-  SSH_ACTIONS: false
+  SSH_ACTIONS: true
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
+  UPLOAD_CONFIG: true
   TZ: Asia/Shanghai
 
 jobs:
-  build:
+  build-openwrt:
     runs-on: ubuntu-latest
 
     steps:
@@ -83,6 +84,20 @@ jobs:
       uses: P3TERX/debugger-action@master
       if: env.SSH_ACTIONS == 'true'
 
+    - name: UPLOAD CONFIG
+      if: env.UPLOAD_CONFIG == 'true'
+      run: |
+        cd openwrt
+        cp $CONFIG_FILE .config.up
+        ./scripts/diffconfig.sh > diffconfig.up
+
+    - name: Upload config directory
+      uses: actions/upload-artifact@master
+      if: env.UPLOAD_CONFIG == 'true'
+      with:
+        name: OpenWrt_config
+        path: openwrt/*.up
+
     - name: Download package
       id: package
       run: |
@@ -103,7 +118,7 @@ jobs:
       uses: actions/upload-artifact@master
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
-        name: OpenWrt_directory
+        name: OpenWrt_bin
         path: openwrt/bin
 
     - name: Organize files
