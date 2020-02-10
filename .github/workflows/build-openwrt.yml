@@ -29,9 +29,10 @@ env:
   DIY_SH: diy.sh
   FREE_UP_DISK: false
   SSH_ACTIONS: false
-  UPLOAD_BIN_DIR: false
-  UPLOAD_FIRMWARE: true
   UPLOAD_CONFIG: true
+  UPLOAD_BIN_DIR: true
+  UPLOAD_TARGET_DIR: true
+  UPLOAD_FIRMWARE: true
   TZ: Asia/Shanghai
 
 jobs:
@@ -112,17 +113,24 @@ jobs:
       id: compile
       run: |
         cd openwrt
-        # echo -e "$(nproc) thread compile"
-        # make -j$(nproc) || make -j1 V=s
-        make -j1 V=s
+        echo -e "$(nproc) thread compile"
+        make -j$(nproc) || make -j1 V=s
+        mkdir -p bin/targets && touch bin/temp.txt && touch bin/targets/temp.txt
         echo "::set-output name=status::success"
 
-    - name: Upload bin directory
+    - name: Upload bin firmware directory
       uses: actions/upload-artifact@master
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
-        name: OpenWrt_bin
+        name: OpenWrt_bin_firmware
         path: openwrt/bin
+
+    - name: Upload targets firmware directory
+      uses: actions/upload-artifact@master
+      if: steps.compile.outputs.status == 'success' && env.UPLOAD_TARGET_DIR == 'true'
+      with:
+        name: OpenWrt_targets_firmware
+        path: openwrt/bin/targets
 
     - name: Organize files
       id: organize
@@ -133,9 +141,9 @@ jobs:
         echo "::set-env name=FIRMWARE::$(pwd)"
         echo "::set-output name=status::success"
 
-    - name: Upload firmware directory
+    - name: Upload init firmware directory
       uses: actions/upload-artifact@master
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: OpenWrt_firmware
+        name: OpenWrt_init_firmware
         path: ${{ env.FIRMWARE }}
