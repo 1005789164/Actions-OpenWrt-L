@@ -86,7 +86,7 @@ jobs:
       uses: P3TERX/debugger-action@master
       if: env.SSH_ACTIONS == 'true'
 
-    - name: UPLOAD CONFIG
+    - name: Create config directory
       if: env.UPLOAD_CONFIG == 'true'
       run: |
         cd openwrt
