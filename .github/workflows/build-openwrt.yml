@@ -22,10 +22,10 @@ on:
     types: [started]
 
 env:
-  REPO_URL: https://github.com/Lienol/lean-lede.git
-  REPO_BRANCH: dev
-  D_CONFIG: L_new3.config
-  DIY_SH: L_diy.sh
+  REPO_URL: https://github.com/coolsnowwolf/lede.git
+  REPO_BRANCH: master
+  D_CONFIG: new3.config
+  DIY_SH: diy.sh
   FREE_UP_DISK: false
   SSH_ACTIONS: false
   UPLOAD_CONFIG: true
