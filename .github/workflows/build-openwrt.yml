@@ -16,8 +16,8 @@ on:
 #      - master
 #    paths:
 #      - '.config'
-#  schedule:
-#    - cron: 0 8 * * 5
+  schedule:
+    - cron: 0 8 * * 5
   watch:
     types: [started]
 
@@ -30,8 +30,8 @@ env:
   FREE_UP_DISK: false
   SSH_ACTIONS: false
   UPLOAD_CONFIG: true
-  UPLOAD_BIN_DIR: true
-  UPLOAD_TARGET_DIR: true
+  UPLOAD_BIN_DIR: false
+  UPLOAD_TARGET_DIR: false
   UPLOAD_FIRMWARE: true
   TZ: Asia/Shanghai
 
