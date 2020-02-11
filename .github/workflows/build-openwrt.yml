@@ -22,17 +22,17 @@ on:
     types: [started]
 
 env:
-  REPO_URL: https://github.com/coolsnowwolf/lede
-  REPO_BRANCH: master
-  D_CONFIG: new3.config
-  CONFIG_FILE: .config
-  DIY_SH: diy.sh
+  REPO_URL: https://github.com/Lienol/lean-lede.git
+  REPO_BRANCH: dev
+  D_CONFIG: L_new3.config
+  DIY_SH: L_diy.sh
   FREE_UP_DISK: false
   SSH_ACTIONS: false
   UPLOAD_CONFIG: true
   UPLOAD_BIN_DIR: false
   UPLOAD_TARGET_DIR: false
   UPLOAD_FIRMWARE: true
+  CONFIG_FILE: .config
   TZ: Asia/Shanghai
 
 jobs:
