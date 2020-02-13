@@ -78,5 +78,7 @@ jobs:
         [ -e $D_CONFIG ] && mv $D_CONFIG openwrt/.config
         chmod +x $DIY_SH
         cd openwrt
+        cat feeds/luci/modules/luci-base/root/etc/config/luci
         ../$DIY_SH
+        cat feeds/luci/modules/luci-base/root/etc/config/luci
         make defconfig
