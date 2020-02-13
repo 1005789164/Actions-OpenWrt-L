@@ -82,3 +82,4 @@ jobs:
         ../$DIY_SH
         cat feeds/luci/modules/luci-base/root/etc/config/luci
         make defconfig
+        cat feeds/luci/modules/luci-base/root/etc/config/luci
