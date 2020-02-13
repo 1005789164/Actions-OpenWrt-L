@@ -15,7 +15,7 @@ on:
 #    branches:
 #      - master
     paths:
-      - 'L_new3.config'
+      - 'new3.config'
   schedule:
     - cron: 0 8 * * 5
 #  watch:
@@ -24,13 +24,12 @@ on:
 env:
   REPO_URL: https://github.com/Lienol/openwrt.git
   REPO_BRANCH: dev-19.07
-  D_CONFIG: L_new3.config
-  DIY_SH: L_diy.sh
+  D_CONFIG: new3.config
+  DIY_SH: diy.sh
   FREE_UP_DISK: false
   SSH_ACTIONS: false
   UPLOAD_CONFIG: true
   UPLOAD_BIN_DIR: false
-  UPLOAD_TARGET_DIR: false
   UPLOAD_FIRMWARE: true
   CONFIG_FILE: .config
   TZ: Asia/Shanghai
@@ -115,22 +114,15 @@ jobs:
         cd openwrt
         echo -e "$(nproc) thread compile"
         make -j$(nproc) || make -j1 V=s
-        mkdir -p bin/targets && touch bin/temp.txt && touch bin/targets/temp.txt
+        mkdir -p bin && touch bin/.temp.txt
         echo "::set-output name=status::success"
 
-    - name: Upload bin firmware directory
+    - name: Upload bin directory
       uses: actions/upload-artifact@master
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
-        name: OpenWrt_bin_firmware
+        name: OpenWrt_bin
         path: openwrt/bin
-
-    - name: Upload targets firmware directory
-      uses: actions/upload-artifact@master
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_TARGET_DIR == 'true'
-      with:
-        name: OpenWrt_targets_firmware
-        path: openwrt/bin/targets
 
     - name: Organize files
       id: organize
@@ -141,9 +133,17 @@ jobs:
         echo "::set-env name=FIRMWARE::$(pwd)"
         echo "::set-output name=status::success"
 
-    - name: Upload init firmware directory
+    - name: Upload firmware directory
       uses: actions/upload-artifact@master
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: OpenWrt_init_firmware
+        name: OpenWrt_firmware
         path: ${{ env.FIRMWARE }}
+
+    - name: Upload firmware to github repository
+      uses: 1005789164/push-action@master
+      if: steps.organize.outputs.status == 'success' && !cancelled()
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        directory: ${{ env.FIRMWARE }}
+        folder: true
