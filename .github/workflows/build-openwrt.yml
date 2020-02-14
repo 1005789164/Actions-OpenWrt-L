@@ -130,7 +130,10 @@ jobs:
       run: |
         cd openwrt/bin/targets/*/*
         rm -rf packages
+        mkdir -p squashfs-sysupgrade
+        cp *squashfs-sysupgrade* squashfs-sysupgrade
         echo "::set-env name=FIRMWARE::$(pwd)"
+        echo "::set-env name=SSFIRMWARE::$(pwd)/squashfs-sysupgrade"
         echo "::set-output name=status::success"
 
     - name: Upload firmware directory
@@ -145,5 +148,5 @@ jobs:
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
         github_token: ${{ secrets.OPENWRT_TOKEN }}
-        directory: ${{ env.FIRMWARE }}
-        folder: true
+        directory: ${{ env.SSFIRMWARE }}
+        folder: "bin"
