@@ -10,7 +10,7 @@
 
 # 修改默认主题
 DEFAULT_THEME="argon_dark"
-sed -i '/option mediaurlbase \/.*\//s/static.*/static\/'$DEFAULT_THEME'/' feeds/luci/modules/luci-base/root/etc/config/luci
-mv feeds/lienol/lienol/luci-theme-argon-dark-mod/ feeds/luci/themes/
+#sed -i '/option mediaurlbase \/.*\//s/static.*/static\/'$DEFAULT_THEME'/' feeds/luci/modules/luci-base/root/etc/config/luci
+sed -i '2auci set luci.main.mediaurlbase=/luci-static/'$DEFAULT_THEME'' package/default-settings/files/zzz-default-settings
 
 #
