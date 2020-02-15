@@ -131,7 +131,7 @@ jobs:
         cd openwrt/bin/targets/*/*
         rm -rf packages
         mkdir -p squashfs-sysupgrade
-        cp -r *squashfs-sysupgrade* ./squashfs-sysupgrade/
+        find . -name "*squashfs-sysupgrade*" -type f | xargs cp ./squashfs-sysupgrade/
         echo "::set-env name=FIRMWARE::$(pwd)"
         echo "::set-env name=SSFIRMWARE::$(pwd)/squashfs-sysupgrade"
         echo "::set-output name=status::success"
