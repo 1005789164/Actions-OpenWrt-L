@@ -74,8 +74,8 @@ jobs:
 
     - name: Load custom configuration
       run: |
-        [ -e files ] && mv files openwrt/files
-        [ -e $D_CONFIG ] && mv $D_CONFIG openwrt/.config
+        [ -e files ] && cp -rf files openwrt/files
+        [ -e $D_CONFIG ] && cp -f $D_CONFIG openwrt/.config
         chmod +x $DIY_SH
         cd openwrt
         ../$DIY_SH
@@ -141,7 +141,7 @@ jobs:
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
         name: OpenWrt_firmware
-        path: ${{ env.FIRMWARE }}
+        path: ${{ env.SSFIRMWARE }}
 
     - name: Upload firmware to github repository
       uses: 1005789164/push-action@master
