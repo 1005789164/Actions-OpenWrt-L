@@ -147,6 +147,6 @@ jobs:
       uses: 1005789164/push-action@master
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        github_token: ${{ secrets.OPENWRT_TOKEN }}
+        you_token: ${{ secrets.OPENWRT_TOKEN }}
         directory: ${{ env.SSFIRMWARE }}
         folder: "bin"
