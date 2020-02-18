@@ -1,0 +1,71 @@
+#=================================================
+# https://github.com/P3TERX/Actions-OpenWrt
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: MIT
+# Author: P3TERX
+# Blog: https://p3terx.com
+#=================================================
+
+name: Release to depot
+
+on:
+  release:
+    types: [published]
+
+env:
+  REPO_URL: https://github.com/Lienol/openwrt.git
+  REPO_BRANCH: dev-19.07
+  D_CONFIG: new3.config
+  DIY_SH: diy.sh
+  FREE_UP_DISK: false
+  SSH_ACTIONS: false
+  UPLOAD_CONFIG: false
+  UPLOAD_BIN_DIR: false
+  UPLOAD_FIRMWARE: false
+  CONFIG_FILE: .config
+  TZ: Asia/Shanghai
+
+jobs:
+  release-to-depot:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo swapoff /swapfile
+        sudo rm -rf /swapfile /etc/apt/sources.list.d/*
+        sudo -E apt-get -qq update
+        sudo -E apt-get -qq install bzip2 gawk gettext git unzip flex git-core
+
+    - name: Wait 30s
+      run: |
+        sleep 30
+        ls -al
+
+    - name: Download release
+      uses: Legion2/download-release-action@v2.1.0
+      with:
+        repository: ${{ github.repository }}
+        tag: 'latest'
+        path: firmware
+        file: squashfs-sysupgrade.tgz
+
+    - name: Add and commit file
+      run: |
+        mv ./firmware/*-sysupgrade.tgz ./firmware/"$(TZ=UTC-8 date +"%Y.%m.%d")".tgz
+        git config --local user.email "fuck@github.com"
+        git config --local user.name "FUCK"
+        git add ./
+        git commit -m ".bin and .seed" -a
+        ls -al
+
+    - name: To depot
+      uses: 1005789164/action-push@master
+      with:
+        you_token: ${{ secrets.OPENWRT_TOKEN }}
+        directory: "./"
