@@ -18,8 +18,8 @@ on:
 #    - master
 #    paths:
 #    - 'new3.config'
-  watch:
-    types: [started]
+#  watch:
+#    types: [started]
 
 env:
   REPO_URL: https://github.com/Lienol/openwrt.git
