@@ -13,8 +13,8 @@ on:
     types: [published]
 
 env:
-  REPO_URL: https://github.com/Lienol/openwrt.git
-  REPO_BRANCH: dev-19.07
+  REPO_URL: https://github.com/coolsnowwolf/lede.git
+  REPO_BRANCH: master
   D_CONFIG: new3.config
   DIY_SH: diy.sh
   FREE_UP_DISK: false
@@ -40,7 +40,7 @@ jobs:
         sudo swapoff /swapfile
         sudo rm -rf /swapfile /etc/apt/sources.list.d/*
         sudo -E apt-get -qq update
-        sudo -E apt-get -qq install bzip2 gawk gettext git unzip flex git-core
+        sudo -E apt-get -qq install bzip2 gawk gettext unzip flex git git-core
 
     - name: Wait 30s
       run: |
@@ -52,15 +52,16 @@ jobs:
       with:
         repository: ${{ github.repository }}
         tag: 'latest'
-        path: firmware
-        file: squashfs-sysupgrade.tgz
+        path: ./
+        file: firmware-squashfs-sysupgrade.tgz
 
     - name: Add and commit file
       run: |
-        mv ./firmware/*-sysupgrade.tgz ./firmware/"$(TZ=UTC-8 date +"%Y.%m.%d")".tgz
+        mkdir -p firmware/
+        [ -e *-sysupgrade.tgz ] && cp *-sysupgrade.tgz ./firmware/"$(TZ=UTC-8 date +"%Y.%m.%d")".tgz
         git config --local user.email "fuck@github.com"
         git config --local user.name "FUCK"
-        git add ./
+        git add ./firmware/"$(TZ=UTC-8 date +"%Y.%m.%d")".tgz
         git commit -m ".bin and .seed" -a
         ls -al
 
