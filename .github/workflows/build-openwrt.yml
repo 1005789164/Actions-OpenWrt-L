@@ -18,8 +18,8 @@ on:
 #    - master
 #    paths:
 #    - 'new3.config'
-#  watch:
-#    types: [started]
+  watch:
+    types: [started]
 
 env:
   REPO_URL: https://github.com/Lienol/openwrt.git
@@ -134,7 +134,7 @@ jobs:
         if [ -e *.seed ]; then
           cp *.seed ${GITHUB_WORKSPACE}/firmware-squashfs-sysupgrade
         else
-          cp ${GITHUB_WORKSPACE}/openwrt/.config > ${GITHUB_WORKSPACE}/firmware-squashfs-sysupgrade/config.seed
+          cp ${GITHUB_WORKSPACE}/openwrt/.config ${GITHUB_WORKSPACE}/firmware-squashfs-sysupgrade/config.seed
         fi
         echo "::set-env name=FIRMWARE::$(pwd)"
         echo "::set-env name=SQUASHFS_SYSUPGRADE_DIR::${GITHUB_WORKSPACE}/firmware-squashfs-sysupgrade"
