@@ -57,11 +57,13 @@ jobs:
 
     - name: Add and commit file
       run: |
+        file_date="$(TZ=UTC-8 date +"%Y.%m.%d")".tgz
         mkdir -p firmware/
-        [ -e *-sysupgrade.tgz ] && cp *-sysupgrade.tgz ./firmware/"$(TZ=UTC-8 date +"%Y.%m.%d")".tgz
+        [ -e ./firmware/${file_date} ] && rm -rf ./firmware/${file_date}
+        [ -e *-sysupgrade.tgz ] && cp *-sysupgrade.tgz ./firmware/${file_date}
         git config --local user.email "fuck@github.com"
         git config --local user.name "FUCK"
-        git add ./firmware/"$(TZ=UTC-8 date +"%Y.%m.%d")".tgz
+        git add -f ./firmware/${file_date}
         git commit -m ".bin and .seed" -a
         ls -al
 

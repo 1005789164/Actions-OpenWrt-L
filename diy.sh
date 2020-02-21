@@ -19,4 +19,9 @@ sed -n 18,28p ./default-settings > ./default-settings-content
 sed -i '/uci commit fstab/r ./default-settings-content' package/default-settings/files/zzz-default-settings
 rm -f default-setting*
 
+# 更新smartdns
+sed -i 's/d6c34658af0d4aac94655a139030c5ec12884754/0d2d08586a34d83fee7d9ad6199eade81ffe0f64/' package/lean/smartdns/Makefile
+sed -i 's/2019.12.15/2020.02.20/' package/lean/smartdns/Makefile
+sed -i 's/PKG_RELEASE:=2/PKG_RELEASE:=3/' package/lean/smartdns/Makefile
+
 #
