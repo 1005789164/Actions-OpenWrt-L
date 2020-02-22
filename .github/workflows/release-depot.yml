@@ -11,6 +11,8 @@ name: Release to depot
 on:
   release:
     types: [published]
+#  watch:
+#    types: [started]
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede.git
