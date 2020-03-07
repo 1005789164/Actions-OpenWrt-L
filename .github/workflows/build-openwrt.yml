@@ -170,6 +170,5 @@ jobs:
         git config --local user.name "FUCK"
         git add -f ./
         git commit -m ".bin and .seed" -a
-        echo ${GITHUB_REPOSITORY}
-        git push --force https://${PUSH_TOKEN}@github.com/1005789164/Actions-OpenWrt-L.git HEAD:firmware
+        git push --force --quiet https://${PUSH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:firmware
         
