@@ -154,8 +154,8 @@ jobs:
         token: ${{ secrets.OPENWRT_TOKEN }}
         gzip: false
         files: >
-          ${{ env.SQUASHFS_SYSUPGRADE_DIR }}/*squashfs-sysupgrade.bin
-          ${{ env.SQUASHFS_SYSUPGRADE_DIR }}/*.seed
+          firmware-squashfs-sysupgrade/*squashfs-sysupgrade.bin
+          firmware-squashfs-sysupgrade/*.seed
         allow_override: true
 
     - name: Push firmware
