@@ -18,8 +18,8 @@ on:
 #    - master
 #    paths:
 #    - 'new3.config'
-#  watch:
-#    types: [started]
+  watch:
+    types: [started]
 
 env:
   REPO_URL: https://github.com/Lienol/openwrt.git
@@ -152,7 +152,23 @@ jobs:
       uses: 1005789164/action-release@master
       with:
         token: ${{ secrets.OPENWRT_TOKEN }}
-        gzip: true
+        gzip: false
         files: >
-          ./firmware-squashfs-sysupgrade
+          ${{ env.SQUASHFS_SYSUPGRADE_DIR }}/*squashfs-sysupgrade.bin
+          ${{ env.SQUASHFS_SYSUPGRADE_DIR }}/*.seed
         allow_override: true
+
+    - name: Push firmware
+      env:
+        PUSH_TOKEN: ${{ secrets.OPENWRT_TOKEN }}
+      run: |
+        cd firmware-squashfs-sysupgrade
+        [ -e *squashfs-sysupgrade.bin ] && mv *squashfs-sysupgrade.bin ${RELEASE_TAG}.bin
+        [ -e *.seed ] && mv *.seed ${RELEASE_TAG}.seed
+        ls -al
+        git config --local user.email "fuck@github.com"
+        git config --local user.name "FUCK"
+        git add -f ./
+        git commit -m ".bin and .seed" -a
+        git push --force https://${PUSH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:firmware
+        
