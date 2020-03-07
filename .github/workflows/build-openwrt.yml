@@ -166,9 +166,10 @@ jobs:
         [ -e *squashfs-sysupgrade.bin ] && mv *squashfs-sysupgrade.bin ${RELEASE_TAG}.bin
         [ -e *.seed ] && mv *.seed ${RELEASE_TAG}.seed
         ls -al
+        git init
         git config --local user.email "fuck@github.com"
         git config --local user.name "FUCK"
         git add -f ./
-        git commit -m ".bin and .seed" -a
+        git commit -m ".bin and .seed"
         git push --force --quiet https://${PUSH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:firmware
         
