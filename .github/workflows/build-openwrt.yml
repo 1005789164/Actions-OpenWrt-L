@@ -162,11 +162,14 @@ jobs:
       env:
         PUSH_TOKEN: ${{ secrets.OPENWRT_TOKEN }}
       run: |
-        cd firmware-squashfs-sysupgrade
-        [ -e *squashfs-sysupgrade.bin ] && mv *squashfs-sysupgrade.bin ${RELEASE_TAG}.bin
-        [ -e *.seed ] && mv *.seed ${RELEASE_TAG}.seed
+        git clone --depth 1 https://github.com/${GITHUB_REPOSITORY}.git -b firmware firmware-branch
+        cd firmware-branch
+        [ -e ${RELEASE_TAG}.bin ] && rm -f ${RELEASE_TAG}.bin
+        [ -e ${RELEASE_TAG}.seed ] && rm -f ${RELEASE_TAG}.seed
+        [ -e ../firmware-squashfs-sysupgrade/*squashfs-sysupgrade.bin ] && cp ../firmware-squashfs-sysupgrade/*squashfs-sysupgrade.bin ${RELEASE_TAG}.bin
+        [ -e ../firmware-squashfs-sysupgrade/*.seed ] && cp ../firmware-squashfs-sysupgrade/*.seed ${RELEASE_TAG}.seed
         ls -al
-        git init
+        git checkout firmware
         git config --local user.email "fuck@github.com"
         git config --local user.name "FUCK"
         git add -f ./
