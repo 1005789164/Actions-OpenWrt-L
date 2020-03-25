@@ -9,8 +9,8 @@
 name: Build OpenWrt
 
 on:
-  schedule:
-    - cron: 0 23 * * *
+#  schedule:
+#    - cron: 0 23 * * *
 #  release:
 #    types: [published]
 #  push:
@@ -37,6 +37,7 @@ env:
 jobs:
   build-openwrt:
     runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
     - name: Checkout
