@@ -35,6 +35,7 @@ mv MJ-dns/smartdns package/lean/
 mv MJ-dns/luci-app-smartdns feeds/luci/applications/
 mkdir -p feeds/luci/applications/luci-app-smartdns/root/etc/config
 mv MJ-dns/smartdns.txt feeds/luci/applications/luci-app-smartdns/root/etc/config/smartdns
+sed -i '/\/package\/openwrt\/files\/etc\/config\/smartdns/d' package/lean/smartdns/Makefile
 rm -rf MJ-dns
 
 # 修改默认设置
