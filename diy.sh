@@ -40,3 +40,12 @@ rm -rf MJ-dns
 
 # 修改默认设置
 sed -i 's/SNAPSHOT/SNAPSHOT-'$(TZ=UTC-8 date +"%Y.%m.%d")'/' package/default-settings/files/zzz-default-settings
+sed -i 's/enabled.*/enabled\t\t1/; s/enable_natpmp.*/enable_natpmp\t1/; s/enable_upnp.*/enable_upnp\t1/' feeds/packages/net/miniupnpd/files/upnpd.config
+sed -i 's/network.globals.ula_prefix.*/network.globals.ula_prefix='"''"/ package/base-files/files/bin/config_generate
+sed -i '/filter_aaaa/d' package/network/services/dnsmasq/files/dhcp.conf
+
+# 替换minidlna为大雕的minidlna
+rm -rf feeds/packages/multimedia/minidlna
+git clone --depth 1 https://github.com/coolsnowwolf/packages lede_packages
+mv lede_packages/multimedia/minidlna feeds/packages/multimedia/
+rm -rf lede_packages
