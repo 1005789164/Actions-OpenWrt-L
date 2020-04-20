@@ -11,7 +11,7 @@ sed -i 's/192.168.1.1/192.168.6.1/g' package/base-files/files/bin/config_generat
 
 # 修改默认主题
 DEFAULT_THEME="bootstrap_mod"
-sed -i "s/luci-theme-bootstrap/luci-theme-$DEFAULT_THEME/g" feeds/luci/collections/luci/Makefile
+#sed -i "s/luci-theme-bootstrap/luci-theme-$DEFAULT_THEME/g" feeds/luci/collections/luci/Makefile
 sed -i '/mediaurlbase/d' package/default-settings/files/zzz-default-settings
 sed -i '3auci set luci.main.mediaurlbase=/luci-static/'$DEFAULT_THEME package/default-settings/files/zzz-default-settings
 grep -rin "url('admin/translations'" feeds/lienol/lienol/ | while read i
