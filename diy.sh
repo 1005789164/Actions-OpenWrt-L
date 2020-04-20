@@ -49,3 +49,4 @@ rm -rf feeds/packages/multimedia/minidlna
 git clone --depth 1 https://github.com/coolsnowwolf/packages lede_packages
 mv lede_packages/multimedia/minidlna feeds/packages/multimedia/
 rm -rf lede_packages
+sed -i 's/libffmpeg-full/libffmpeg/; /$(ICONV_DEPENDS) $(INTL_DEPENDS)/a USERID:=minidlna:minidlna' feeds/packages/multimedia/minidlna/Makefile
