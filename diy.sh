@@ -20,7 +20,7 @@ do
 done
 
 # 添加第三方主题
-git clone --depth 1 https://github.com/garypang13/luci-theme-edge.git package/lean/
+git clone --depth 1 https://github.com/garypang13/luci-theme-edge.git package/lean/luci-theme-edge
 
 # 移动菜单服务里面的项到网络存储
 curl -fsSL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/lean/default-settings/files/zzz-default-settings > ./default-settings
