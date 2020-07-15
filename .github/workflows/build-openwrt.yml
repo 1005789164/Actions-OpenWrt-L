@@ -139,7 +139,8 @@ jobs:
         fi
         echo "::set-env name=FIRMWARE::$(pwd)"
         echo "::set-env name=SQUASHFS_SYSUPGRADE_DIR::${GITHUB_WORKSPACE}/firmware-squashfs-sysupgrade"
-        echo "::set-env name=RELEASE_TAG::"$(TZ=UTC-8 date +"%Y.%m.%d")""
+        #echo "::set-env name=RELEASE_TAG::"$(TZ=UTC-8 date +"%Y.%m.%d")""
+        echo "::set-env name=RELEASE_TAG::OpenWrt-firmware"
         echo "::set-output name=status::success"
 
     - name: Upload firmware directory

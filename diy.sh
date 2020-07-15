@@ -10,7 +10,7 @@
 sed -i 's/192.168.1.1/192.168.6.1/g' package/base-files/files/bin/config_generate
 
 # 修改默认主题
-DEFAULT_THEME="edge"
+DEFAULT_THEME="bootstrap"
 #sed -i "s/luci-theme-bootstrap/luci-theme-$DEFAULT_THEME/g" feeds/luci/collections/luci/Makefile
 sed -i '/mediaurlbase/d' package/default-settings/files/zzz-default-settings
 sed -i '/luci.main.lang/a\uci set luci.main.mediaurlbase=/luci-static/'$DEFAULT_THEME package/default-settings/files/zzz-default-settings
@@ -18,9 +18,6 @@ grep -rin "url('admin/translations'" feeds/lienol/lienol/ | while read i
 do
 [ -f "$(echo $i | cut -d: -f1)" ] && sed -i "/url('admin\/translations'/d" "$(echo $i | cut -d: -f1)"
 done
-
-# 添加第三方主题
-git clone --depth 1 https://github.com/garypang13/luci-theme-edge.git package/lean/luci-theme-edge
 
 # 移动菜单服务里面的项到网络存储
 curl -fsSL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/lean/default-settings/files/zzz-default-settings > ./default-settings
@@ -30,7 +27,7 @@ rm -rf default-setting*
 
 # 修改默认设置
 sed -i 's/SNAPSHOT/SNAPSHOT-'$(TZ=UTC-8 date +"%Y.%m.%d")'/' package/default-settings/files/zzz-default-settings
-sed -i 's/enabled.*/enabled\t\t1/; s/enable_natpmp.*/enable_natpmp\t1/; s/enable_upnp.*/enable_upnp\t1/' feeds/packages/net/miniupnpd/files/upnpd.config
+#sed -i 's/enabled.*/enabled\t\t0/; s/enable_natpmp.*/enable_natpmp\t1/; s/enable_upnp.*/enable_upnp\t1/' feeds/packages/net/miniupnpd/files/upnpd.config
 sed -i 's/network.globals.ula_prefix.*/network.globals.ula_prefix='"''"/ package/base-files/files/bin/config_generate
 sed -i '/filter_aaaa/d' package/network/services/dnsmasq/files/dhcp.conf
 
