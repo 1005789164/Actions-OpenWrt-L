@@ -10,7 +10,7 @@ name: Build OpenWrt
 
 on:
   schedule:
-    - cron: 0 23 * * 5
+    - cron: 0 23 * * *
 #  release:
 #    types: [published]
 #  push:
@@ -153,7 +153,7 @@ jobs:
     - name: Upload to release
       uses: 1005789164/action-release@master
       with:
-        token: ${{ secrets.OPENWRT_TOKEN }}
+        token: ${{ secrets.ACTION_TOKEN }}
         gzip: false
         files: >
           firmware-squashfs-sysupgrade/*squashfs-sysupgrade.bin
@@ -162,7 +162,7 @@ jobs:
 
     - name: Push firmware
       env:
-        PUSH_TOKEN: ${{ secrets.OPENWRT_TOKEN }}
+        PUSH_TOKEN: ${{ secrets.ACTION_TOKEN }}
       run: |
         # git clone --depth 1 https://github.com/${GITHUB_REPOSITORY}.git -b firmware firmware-branch
         mkdir -p firmware-branch
