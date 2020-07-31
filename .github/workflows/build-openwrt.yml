@@ -26,12 +26,9 @@ env:
   REPO_BRANCH: dev-19.07
   D_CONFIG: l_new3.config
   DIY_SH: diy.sh
-  FREE_UP_DISK: false
   SSH_ACTIONS: false
-  UPLOAD_CONFIG: false
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: false
-  CONFIG_FILE: .config
   TZ: Asia/Shanghai
 
 jobs:
@@ -41,28 +38,18 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@master
+      uses: actions/checkout@main
 
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        # sudo swapoff /swapfile
-        sudo rm -rf /swapfile /etc/apt/sources.list.d/*
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
-        sudo -E apt-get -qq install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler
-        # curl -fsSL https://raw.githubusercontent.com/P3TERX/dotfiles/master/.bashrc >> ~/.bashrc
-
-    - name: Free up disk space
-      if: env.FREE_UP_DISK == 'true'
-      env:
-        DEBIAN_FRONTEND: noninteractive
-      run: |
-        sudo rm -rf /usr/share/dotnet
-        docker rmi `docker images -q`
-        sudo -E apt-get -q purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* mysql* php*
+        sudo -E apt-get -qq install jq build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
+        sudo timedatectl set-timezone "$TZ"
 
     - name: Clone source code
       run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
@@ -83,23 +70,8 @@ jobs:
         make defconfig
 
     - name: SSH connection to Actions
-      uses: P3TERX/debugger-action@master
+      uses: P3TERX/debugger-action@main
       if: env.SSH_ACTIONS == 'true'
-
-    - name: Create config directory
-      if: env.UPLOAD_CONFIG == 'true'
-      run: |
-        cd openwrt
-        mkdir -p upload
-        cp -f $CONFIG_FILE upload
-        ./scripts/diffconfig.sh > upload/diffconfig
-
-    - name: Upload config directory
-      uses: actions/upload-artifact@master
-      if: env.UPLOAD_CONFIG == 'true'
-      with:
-        name: OpenWrt_config
-        path: openwrt/upload
 
     - name: Download package
       id: package
@@ -115,11 +87,10 @@ jobs:
         cd openwrt
         echo -e "$(($(nproc)+2)) thread compile"
         make -j$(($(nproc)+2)) || make -j1 V=s
-        mkdir -p bin && touch bin/.temp.txt
         echo "::set-output name=status::success"
 
     - name: Upload bin directory
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
         name: OpenWrt_bin
@@ -138,26 +109,24 @@ jobs:
           cp ${GITHUB_WORKSPACE}/openwrt/.config ${GITHUB_WORKSPACE}/firmware-squashfs-sysupgrade/config.seed
         fi
         echo "::set-env name=FIRMWARE::$(pwd)"
-        echo "::set-env name=SQUASHFS_SYSUPGRADE_DIR::${GITHUB_WORKSPACE}/firmware-squashfs-sysupgrade"
-        #echo "::set-env name=RELEASE_TAG::"$(TZ=UTC-8 date +"%Y.%m.%d")""
+        #echo "::set-env name=RELEASE_TAG::"$(TZ=UTC-8 date +"%Y.%m.%d")
         echo "::set-env name=RELEASE_TAG::OpenWrt-firmware"
         echo "::set-output name=status::success"
 
     - name: Upload firmware directory
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true'
       with:
         name: OpenWrt_firmware
-        path: ${{ env.SQUASHFS_SYSUPGRADE_DIR }}
+        path: ${{ env.FIRMWARE }}
 
     - name: Upload to release
-      uses: 1005789164/action-release@master
+      uses: 1005789164/action-release@1.0
       with:
         token: ${{ secrets.ACTION_TOKEN }}
         gzip: false
         files: >
-          firmware-squashfs-sysupgrade/*squashfs-sysupgrade.bin
-          firmware-squashfs-sysupgrade/*.seed
+          firmware-squashfs-sysupgrade/*
         allow_override: true
 
     - name: Push firmware
