@@ -108,9 +108,9 @@ jobs:
         else
           cp ${GITHUB_WORKSPACE}/openwrt/.config ${GITHUB_WORKSPACE}/firmware-squashfs-sysupgrade/config.seed
         fi
-        echo "::set-env name=FIRMWARE::$(pwd)"
-        #echo "::set-env name=RELEASE_TAG::"$(TZ=UTC-8 date +"%Y.%m.%d")
-        echo "::set-env name=RELEASE_TAG::OpenWrt-firmware"
+        echo "FIRMWARE=$(pwd)" >> $GITHUB_ENV
+        #echo "RELEASE_TAG=$(TZ=UTC-8 date +'%Y.%m.%d')" >> $GITHUB_ENV
+        echo "RELEASE_TAG=OpenWrt-firmware" >> $GITHUB_ENV
         echo "::set-output name=status::success"
 
     - name: Upload firmware directory
